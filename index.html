@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Chin-Chón</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon-192.png">
+
+  </head>
+  
+  <body>
+
+    <!-- PUNTAJES y Botón Oponente -->
+    <div id="puntajes">
+      <span>Jugador: 0 pts | Oponente: 0 pts</span>
+    </div>
+    <!-- Banner principal -->
+<img src="img/banner.png" alt="Banner del menú" class="banner-menu" />
+  <!-- Título como imagen -->
+<img src="img/banner-mi-chin-chon.png" alt="Mi Chin-Chón" class="titulo-menu" />
+<!-- Menú principal (barra bajo el header) -->
+
+<div class="menu">
+
+  <!-- Botones como imágenes -->
+  <button id="btn-local" class="btn-menu">
+    <img src="img/jugar-ia.png" alt="Jugar vs IA" />
+  </button>
+  <button id="btn-online" class="btn-menu">
+    <img src="img/jugar-1vs1.png" alt="Jugar 1 vs 1" />
+  </button>
+  <button id="btn-instrucciones" class="btn-menu">
+    <img src="img/instrucciones.png" alt="Instrucciones" />
+  </button>
+  <button id="btn-ajustes" class="btn-menu">
+    <img src="img/ajustes.png" alt="Ajustes" />
+  </button>
+  <button id="btn-salir" class="btn-menu">
+    <img src="img/salir.png" alt="Salir" />
+  </button>
+</div>
+
+  <div id="juego">
+  <!-- MANO DEL OPONENTE -->
+  <div id="mano-oponente" class="zona-cartas fan"></div>
+  <!-- MESA CENTRAL -->
+  <div id="mesa">
+    <!-- MAZO -->
+    <div class="area-mesa">
+      <span class="etiqueta-mesa">Mazo</span>
+      <div class="contenedor-mesa">
+        <img id="mazo-carta" src="img/deck.png" alt="Mazo de cartas" />
+      </div>
+    </div>
+
+    <!-- POZO -->
+    <div class="area-mesa">
+      <span class="etiqueta-mesa">Pozo</span>
+      <div class="contenedor-mesa" id="pozo-contenedor">
+        <!-- Aquí el JS inyecta todas las cartas del pozo -->
+      </div>
+    </div>
+
+    <!-- CORTAR -->
+    <div class="area-mesa">
+      <span class="etiqueta-mesa">Cortar</span>
+      <div class="contenedor-mesa" id="zona-corte">
+        <img id="img-corte" src="img/cruz_corte.png" alt="Corte" />
+      </div>
+    </div>
+  </div> <!-- /#mesa -->
+
+  <!-- MANO DEL JUGADOR -->
+  <div id="mano-jugador" class="zona-cartas fan"></div>
+</div>
+    <!-- MODAL DE RESUMEN -->
+  <div id="modal-resumen" class="modal" style="display: none;">
+    <div class="modal-contenido">
+      <h2 id="titulo-resumen"></h2>
+      <div id="detalle-resumen"></div>
+      <button onclick="cerrarResumen()">Cerrar</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

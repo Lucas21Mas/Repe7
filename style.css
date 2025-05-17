@@ -1,0 +1,618 @@
+/* 🎨 FONDO GLOBAL */
+body {
+  margin: 0;
+  padding: 0;
+  background: url('img/fondo-menu.png') center center / cover no-repeat fixed;
+  font-family: 'Lobster Two', cursive;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+  opacity: 0.07;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Tipografía */
+@import url('https://fonts.googleapis.com/css2?family=Lobster+Two&display=swap');
+/* Header: altura fija y overflow oculto */
+#header {
+  width: 100%;
+  height: 120px;        /* ajusta este valor a tu gusto */
+  overflow: hidden;     /* esconde todo lo que pase de esos 120px */
+  position: relative;
+  z-index: 10;
+}
+/* ——— Barra de menú principal ——— */
+#menu-principal {
+  position: relative;                   /* flujo normal */
+  display: flex;                        /* fila de botones */
+  justify-content: center;              /* centrado horizontal */
+  align-items: center;                  /* centrado vertical */
+  gap: 12px;                            /* espacio entre botones */
+  width: 100%;                          /* ocupa todo el ancho */
+  background-color: #0b3d91;            /* elige tu color de fondo */
+  padding: 10px 0;                      /* espacio arriba/abajo */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  z-index: 2;                           /* encima del juego */
+}
+
+/* Logo: que escale al nuevo alto */
+#logo {
+  max-height: 100%;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* 🧠 MANOS */
+.zona-cartas {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* 🎴 CARTAS DEL JUGADOR/OPONENTE */
+.carta {
+  width: 80px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+.carta:hover {
+  transform: scale(1.05);
+}
+
+/* ♟️ MESA CENTRAL */
+#mesa {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* ─── NUEVAS REGLAS PARA MAZO Y POZO ───────────────────── */
+
+/* Agrupa etiqueta + recuadro */
+.area-mesa {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Recuadro punteado solo alrededor de la imagen */
+.contenedor-mesa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(244, 192, 96, 0.6);
+  border-radius: 16px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Contenedor para apilar cartas del pozo */
+#pozo-contenedor {
+  position: relative;
+  width: 100px;
+  height: 185px;
+  margin: auto;
+  overflow: visible; /* por si alguna carta sobresale */
+}
+.carta-pozo-stack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 140px;
+  height: auto;
+  transform: translate(calc(var(--i) * 2px), calc(var(--i) * 2px));
+  pointer-events: auto;
+}
+/* Tamaños de las imágenes dentro de los recuadros */
+.contenedor-mesa img {
+  width: 140px;
+  height: auto;
+}
+#mazo-carta {
+  width: 160px;
+  height: auto;
+  cursor: pointer;
+}
+/* Carta del pozo alineada igual */
+#carta-pozo {
+  width: 160px;
+  height: auto;
+}
+
+/* 🎛️ BOTONES */
+button {
+  background-color: #f4c060;
+  color: #000;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease;
+}
+button:hover {
+  background-color: #e2b34d;
+}
+
+/* 🎬 ANIMACIÓN “Cortar” */
+#boton-cortar {
+  animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* 🪟 MODAL */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-contenido {
+  background: white;
+  color: black;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+  animation: fadeIn 0.3s ease-in-out;
+}
+.modal-contenido h2 {
+  margin-top: 0;
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 600px) {
+  #mesa {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .carta {
+    width: 60px;
+  }
+  .contenedor-mesa img,
+  #mazo-carta,
+  #carta-pozo {
+    width: 100px;
+  }
+}
+/* Feedback visual al arrastrar */
+.carta.drag-over {
+  outline: 2px dashed #f4c060;
+  transform: none !important;
+}
+/* Escala la carta mientras se está arrastrando */
+.carta.dragging {
+  transform: scale(1.1);
+  z-index: 1000;           /* para que quede por encima */
+  transition: transform 0.1s ease;
+}
+.carta-pozo-final {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  width: 120px;
+  transform: rotate(-20deg);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+/* Animación de sacudida al renderizar cartas */
+.carta.shuffle {
+  animation: shakeCarta 0.3s ease;
+}
+
+@keyframes shakeCarta {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  50% { transform: rotate(-2deg); }
+  75% { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes fadeReinicio {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+#zona-corte img {
+  width: 100px;
+  opacity: 0.9;
+  pointer-events: none;  /* deja pasar los eventos al div */
+}
+/* ✨ Animación de brillo al cortar */
+#zona-corte.animate {
+  animation: corteGlow 0.5s ease;
+}
+
+@keyframes corteGlow {
+  0%   { box-shadow: 0 0 0 rgba(255, 0, 0, 0); }
+  50%  { box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); }
+  100% { box-shadow: 0 0 0 rgba(255, 0, 0, 0); }
+}
+#pozo-contenedor.hover {
+  box-shadow: 0 0 12px rgba(244, 192, 96, 0.8);
+  transition: box-shadow 0.3s ease;
+}
+
+
+/* ✨ Animación al descartar en el pozo */
+@keyframes giroCarta {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(360deg) scale(1.2); }
+  100% { transform: rotate(720deg) scale(1); }
+}
+.carta-descartada {
+  animation: giroCarta 0.8s ease;
+}
+
+/* ✨ Brillo al soltar en pozo o corte */
+#pozo-contenedor.animate,
+#zona-corte.animate {
+  animation: glowZone 0.6s ease;
+}
+
+@keyframes glowZone {
+  0%   { box-shadow: 0 0 0 rgba(255, 255, 0, 0); }
+  50%  { box-shadow: 0 0 20px rgba(255, 255, 0, 0.6); }
+  100% { box-shadow: 0 0 0 rgba(255, 255, 0, 0); }
+}
+.carta-reverso {
+  /* antes: transform: rotate(90deg); */
+  transform: none !important;
+  pointer-events: none;
+}
+.zona-cartas.fan {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-end !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin: 20px auto !important;
+  height: auto !important;
+}
+
+/* Quitar todo posicionamiento previo en cada carta */
+.zona-cartas.fan .carta {
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+}
+
+#puntajes {
+  position: absolute;
+  top: 470px;
+  left: 20px;
+  padding: 6px 14px;
+  background-color: rgba(20, 20, 20, 0.75);
+  border: 2px solid #f4c060;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+/* ——— Ajustes de tamaños específicos ——— */
+
+/* 1️⃣ Mano del jugador: ampliar cartas */
+#mano-jugador .carta {
+  width: 100px !important;    /* antes 80px :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1} */
+}
+
+/* 2️⃣ Mazo y carta principal del pozo: reducir de 160px a 120px */
+.contenedor-mesa img,
+#mazo-carta,
+#carta-pozo {
+  width: 120px !important;    /* antes 160px :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3} :contentReference[oaicite:4]{index=4}:contentReference[oaicite:5]{index=5} */
+}
+
+/* 3️⃣ Contenedor del pozo: estrechar un poco */
+#pozo-contenedor {
+  width: 100px !important;    /* antes 120px :contentReference[oaicite:6]{index=6}:contentReference[oaicite:7]{index=7} */
+  height: 150px !important;   /* antes 180px :contentReference[oaicite:8]{index=8}:contentReference[oaicite:9]{index=9} */
+}
+
+/* 4️⃣ Cartas apiladas en el pozo: reducir de 120px a 90px */
+.carta-pozo-stack {
+  width: 90px !important;     /* antes 120px :contentReference[oaicite:10]{index=10}:contentReference[oaicite:11]{index=11} */
+}
+
+/* 5️⃣ Carta final visible del pozo */
+.carta-pozo-final {
+  width: 90px !important;     /* antes 120px :contentReference[oaicite:12]{index=12}:contentReference[oaicite:13]{index=13} */
+}
+/* 1) Hacemos el overlay un poco más translúcido */
+.menu-overlay {
+  background: rgba(0, 0, 0, 0.6) !important;  /* de 0.8 bajamos a 0.6 */
+}
+/* 3) Aumentamos la opacidad del icono de fondo */
+.btn-menu.icon-local,
+.btn-menu.icon-online,
+.btn-menu.icon-instrucciones,
+.btn-menu.icon-ajustes,
+.btn-menu.icon-salir {
+  background-color: rgba(255,255,255,0.9) !important; /* refuerza el fondo */
+}
+
+/* 4) Incrementamos el tamaño de los botones */
+.btn-menu {
+  padding: 16px 24px !important;   /* más clickable zone */
+  font-size: 1.4rem !important;    /* texto más grande */
+  width: 260px !important;         /* botón más ancho */
+}
+
+/* 5) Aseguramos pointer-events */
+.menu-overlay,
+.menu-overlay .btn-menu {
+  pointer-events: auto !important;  /* que todo en el menú reciba clicks */
+}
+/* Botones del menú: fondo transparente y zona de texto a la derecha */
+#menu-principal .btn-menu {
+  background-color: transparent !important;
+  color: #fff;            /* elige un color de texto que contraste */
+  border: none;
+  padding: 8px 16px 8px 48px !important;  /* espacio izquierdo para el icono */
+  font-size: 1.1rem !important;
+  cursor: pointer;
+}
+
+/* Cada icono como fondo a la izquierda */
+.icon-local {
+  background: url('img/local.png') no-repeat 12px center !important;
+  background-size: 32px !important;
+}
+.icon-online {
+  background: url('img/online.png') no-repeat 12px center !important;
+  background-size: 32px !important;
+}
+/* ——— Barra de menú fijo bajo el header ——— */
+#menu-principal {
+  position: relative;             /* en flujo normal, justo tras el header */
+  top: 0;                         /* opcional si lo quieres “pegado” */
+  width: 100%;                    /* ocupa todo el ancho */
+  background-color: #ffffff;      /* elige aquí tu color de fondo sólido */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;        /* centra fila de botones */
+  align-items: center;
+  gap: 16px;                      /* espacio entre botones */
+  padding: 12px 0;                /* espacio arriba/abajo */
+  z-index: 5;                     /* sobre el resto del contenido */
+}
+
+/* Quitar transparencia y estilos previos */
+.menu-overlay { display: none !important; }
+#menu-principal.menu-overlay { display: flex !important; } /* si usas ambas clases */
+
+/* ——— Botones: fondo limpio, mostrarán sólo tu icono ——— */
+#menu-principal .btn-menu {
+  background: none !important;   /* sin amarillo */
+  border: none;
+  padding: 0 !important;
+  margin: 0 8px !important;      /* margen lateral */
+  width: 48px;                    /* ancho acorde al icono */
+  height: 48px;                   /* alto acorde al icono */
+  cursor: pointer;
+}
+
+/* Cada botón con su icono de fondo */
+#menu-principal .icon-local {
+  background: url('img/local.png') no-repeat center;
+  background-size: contain;
+}
+#menu-principal .icon-online {
+  background: url('img/online.png') no-repeat center;
+  background-size: contain;
+}
+#menu-principal .icon-instrucciones {
+  background: url('img/instrucciones.png') no-repeat center;
+  background-size: contain;
+}
+#menu-principal .icon-ajustes {
+  background: url('img/ajustes.png') no-repeat center;
+  background-size: contain;
+}
+#menu-principal .icon-salir {
+  background: url('img/salir.png') no-repeat center;
+  background-size: contain;
+}
+/* Banner centrado */
+#banner-imagen {
+  display: block;
+  margin: 16px auto;       /* 16px arriba/abajo, centrado */
+  max-width: 100%;
+  height: auto;
+}
+/* ——— Menú principal ——— */
+#menu-principal {
+  position: relative;
+  top: 0;                       /* pegado justo tras el header */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;                    /* espacio entre botones */
+  padding: 12px 0;
+  background-color: #1b262c;    /* elige tu color de fondo */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  z-index: 10;
+}
+
+/* Ocultamos cualquier estilo antiguo de overlay */
+.menu-overlay { display: none !important; }
+
+/* Botones: solo mostrar la imagen interna */
+#menu-principal .btn-menu {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* La imagen dentro del botón ocupará todo el espacio necesario */
+#menu-principal .btn-menu img {
+  display: block;
+  width: 200px;      /* ajusta al ancho real de tus assets */
+  height: auto;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background: url('img/fondo-menu.png') center center / cover no-repeat fixed;
+  font-family: 'Lobster Two', cursive;
+}
+
+/* Contenedor del menú */
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.titulo-menu {
+  display: block;
+  margin: 2rem auto;
+  max-width: 500px;
+  width: 80%;
+  height: auto;
+}
+
+/* Botones con imagen */
+.btn-menu {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.btn-menu img {
+  width: 250px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.btn-menu img:hover {
+  transform: scale(1.05);
+}
+#juego {
+  display: none;               /* oculto por defecto */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 60px auto 40px;      /* separación del menú */
+  padding: 0 20px;
+}
+
+/* Fondo general del menú */
+body {
+  margin: 0;
+  padding: 0;
+  background: url('img/fondo-menu.png') center center / cover no-repeat fixed;
+  font-family: 'Lobster Two', cursive;
+}
+
+
+/* Menú centrado */
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+  background: none;          /* ✅ elimina fondo blanco */
+}
+
+/* Título como imagen */
+.titulo-menu {
+  width: 80%;
+  max-width: 400px;
+  height: auto;
+  margin-bottom: 2rem;
+}
+
+/* Botones como imágenes */
+.btn-menu {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.btn-menu img {
+  width: 240px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.btn-menu img:hover {
+  transform: scale(1.05);
+}
+/* Ocultar el marcador de puntos en el menú */
+#puntajes {
+  display: none;
+}
+.banner-menu {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  max-height: none;
+  object-fit: contain;
+}
+.banner-menu {
+  margin-bottom: 1.5rem; /* separa del título */
+}
+@media (max-width: 600px) {
+  .btn-menu img {
+    width: 180px;
+  }
+
+  .titulo-menu {
+    max-width: 300px;
+  }
+
+  .banner-menu {
+    max-height: 120px;
+  }
+}
+
+
+
